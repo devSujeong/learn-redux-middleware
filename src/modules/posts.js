@@ -9,15 +9,18 @@ const GET_POST = 'post/GET_POST';
 const GET_POST_SUCCESS = 'post/GET_POST_SUCCESS';
 const GET_POST_FAILURE = 'post/GET_POST_FAILURE';
 
+const CLEAR_POST = 'post/CLEAR_POST';
+
 export const getPosts = createPromiseThunk(GET_POSTS, postsAPI.getPosts);
 export const getPost = createPromiseThunk(GET_POST, postsAPI.getPostById);
+export const clearPost = () => ({ type: CLEAR_POST });
 
 const initialState = {
   posts: reducerUtils.initial(),
   post: reducerUtils.initial()
 };
 
-const getPostsReducer = handleAsyncAcitons(GET_POSTS, 'posts');
+const getPostsReducer = handleAsyncAcitons(GET_POSTS, 'posts', true);
 const getPostReducer = handleAsyncAcitons(GET_POST, 'post');
 export default function posts(state = initialState, action) {
   switch(action.type) {
@@ -29,6 +32,11 @@ export default function posts(state = initialState, action) {
     case GET_POST_SUCCESS:
     case GET_POST_FAILURE:
       return getPostReducer(state, action)
+    case CLEAR_POST:
+      return {
+        ...state,
+        post: reducerUtils.initial()
+      }
     default:
       return state;
   }
